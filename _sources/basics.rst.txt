@@ -1,12 +1,12 @@
-.. _basic_skills:
+.. _basics:
 
-Basic Skills
-============
+Basics
+======
 
 This chapter is designed to introduce you to the nuts and
 bolts of mathematical reasoning in Lean: calculating,
-applying lemmas and theorems, and carrying out proof
-by induction.
+applying lemmas and theorems,
+and reasoning about generic structures.
 
 
 .. _calculating:
@@ -270,7 +270,7 @@ to determine the type of an expression:
 The ``#check`` command works for both objects and facts.
 In response to the command ``#check a``, Lean reports that ``a`` has type ``ℝ``.
 In response to the command ``#check mul_comm a b``,
-Lean reports that ``mul_comm a b`` is a proof of the fact ``a + b = b + a``.
+Lean reports that ``mul_comm a b`` is a proof of the fact ``a * b = b * a``.
 The command ``#check (a : ℝ)`` states our expectation that the
 type of ``a`` is ``ℝ``,
 and Lean will raise an error if that is not the case.
@@ -473,7 +473,9 @@ Modulo this difference, we can take the ring axioms to be as follows:
 
 .. code-block:: lean
 
-    variables (R : Type*) [comm_ring R]
+    import algebra.ring
+
+    variables (R : Type*) [ring R]
 
     #check (add_assoc : ∀ a b c : R, a + b + c = a + (b + c))
     #check (add_comm : ∀ a b : R, a + b = b + a)
@@ -565,6 +567,8 @@ as ring axioms, because they follow from the other axioms.
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -597,6 +601,8 @@ Here is a useful theorem:
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -612,6 +618,8 @@ Prove the companion version:
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -626,6 +634,8 @@ Prove the companion version:
 Use these to prove the following:
 
 .. code-block:: lean
+
+    import algebra.ring
 
     namespace my_ring
 
@@ -671,6 +681,8 @@ follows from the ring axioms.
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -710,6 +722,8 @@ so the following theorem also requires some work.
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -727,6 +741,8 @@ still using only facts about rings that we have
 established in this section.
 
 .. code-block:: lean
+
+    import algebra.ring
 
     namespace my_ring
 
@@ -760,6 +776,8 @@ addition of the additive inverse.
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -790,6 +808,8 @@ For example, you now have enough information to prove the theorem
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -813,6 +833,8 @@ the last section:
 
 .. code-block:: lean
 
+    import algebra.ring
+
     namespace my_ring
 
     variables {R : Type*} [ring R]
@@ -835,6 +857,8 @@ can be axiomatized as follows:
 
 .. code-block:: lean
 
+    import algebra.group
+
     variables (A : Type*) [add_group A]
 
     #check (add_assoc : ∀ a b c : A, a + b + c = a + (b + c))
@@ -850,6 +874,8 @@ additive version (and also their abelian variants,
 
 .. code-block:: lean
 
+    import algebra.group
+
     variables (G : Type*) [group G]
 
     #check (mul_assoc : ∀ a b c : G, a * b * c = a * (b * c))
@@ -862,6 +888,8 @@ You will need to prove a number of helper lemmas along the way.
 The proofs we have carried out in this section provide some hints.
 
 .. code-block:: lean
+
+    import algebra.group
 
     variables {G : Type*} [group G]
 
@@ -974,7 +1002,8 @@ In the first example, applying ``le_trans``
 creates two goals,
 and we use the curly braces to enclose the proof
 of the first one.
-In the fourth example and in the last example, we avoid going into tactic mode entirely:
+In the fourth example and in the last example,
+we avoid going into tactic mode entirely:
 ``le_trans h₀ h₁`` and ``le_refl x`` are the proof terms we need.
 
 Here are a few more library theorems:
@@ -1496,8 +1525,7 @@ as well.
 As a hint, you can use the theorem ``add_neg_cancel_right``
 and the ``linarith`` tactic.
 
-For another challenge,
-mathlib's manic naming convention is on proud display
+Lean's naming convention is made manifest
 in the library's name for the triangle inequality:
 
 .. code-block:: lean
@@ -1505,7 +1533,7 @@ in the library's name for the triangle inequality:
     import data.real.basic
 
     -- BEGIN
-    #check (abs_add_le_abs_add_abs : ∀ a b : ℝ, abs (a + b) ≤ abs a + abs b)
+    #check (abs_add : ∀ a b : ℝ, abs (a + b) ≤ abs a + abs b)
     -- END
 
 Use it to prove the following variant:
@@ -1838,6 +1866,8 @@ are compatible with the order:
 
 .. code-block:: lean
 
+    import algebra.ordered_ring
+
     variables {R : Type*} [ordered_ring R]
     variables a b c : R
 
@@ -1851,6 +1881,8 @@ In a later chapter, we will see how to derive the following from ``mul_pos``
 and the definition of ``<``:
 
 .. code-block:: lean
+
+    import algebra.ordered_ring
 
     variables {R : Type*} [ordered_ring R]
     variables a b c : R
@@ -1868,11 +1900,15 @@ enumerated in the last two examples:
 
 .. code-block:: lean
 
+    import algebra.ordered_ring
+
     variables {R : Type*} [ordered_ring R]
     variables a b c : R
 
     -- BEGIN
-    example : a ≤ b ↔ 0 ≤ b - a := sorry
+    example : a ≤ b → 0 ≤ b - a := sorry
+
+    example : 0 ≤ b - a → a ≤ b := sorry
 
     example (h : a ≤ b) (h' : 0 ≤ c) : a * c ≤ b * c := sorry
     -- END
